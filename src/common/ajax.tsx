@@ -1,7 +1,7 @@
 /*
  * @Author: mengzonefire
  * @Date: 2021-08-27 14:48:24
- * @LastEditTime: 2021-08-30 01:30:48
+ * @LastEditTime: 2021-08-28 16:40:08
  * @LastEditors: mengzonefire
  * @Description: 自封装JQ ajax方法
  */
@@ -10,18 +10,16 @@ import { ajaxError } from "./const";
 
 export default function ajax(
   config: any,
-  callback: (response: any) => void,
+  callback: (data: any, xhr: JQuery.jqXHR) => void,
   failback: (statusCode: number) => void
 ) {
-  GM_xmlhttpRequest({
+  $.ajax({
     ...config,
-    onload: (r: any) => {
-      // debug
-      console.log(r);
-      if (Math.floor(r.status / 100) === 2) callback(r);
-      else failback(r.status);
+    success: (data: any, _statusTxt: string, jqXHR: JQuery.jqXHR) => {
+      if (jqXHR.status == 200) callback(data, jqXHR);
+      else failback(jqXHR.status);
     },
-    onerror: () => {
+    error: () => {
       failback(ajaxError);
     },
   });

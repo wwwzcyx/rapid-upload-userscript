@@ -20,10 +20,6 @@ export var bdstoken = "";
 export function setbdstoken(mybdstoken: string) {
   bdstoken = mybdstoken;
 }
-export var refreshList = () => {}; // 刷新文件列表的实现
-export function setrefreshList(func: () => void) {
-  refreshList = func;
-}
 export const swalInstance = new Swalbase(
   new RapiduploadTask(),
   new GeneratebdlinkTask()

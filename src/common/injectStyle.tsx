@@ -1,18 +1,15 @@
-import checkBoxCss from "@/components/checkBox.css";
-import appCss from "@/app.css";
+import "@/components/CheckBox.css";
 import { showAlert } from "./utils";
 import { extCssUrl, appError, ajaxError, swalCssVer } from "./const";
 import ajax from "./ajax";
 
 /**
- * @description: 注入脚本样式
+ * @description: 注入Swal样式
  */
 export function injectStyle(): void {
-  GM_addStyle(appCss); // 注入自定义样式
-  GM_addStyle(checkBoxCss); // 注入checkBox选框样式
-  let swalThemes: string = GM_getValue("swalThemes") || "Default"; // sweetAlert的主题(css), 默认为Default
+  let swalThemes: string = GM_getValue("swalThemes") || "default"; // sweetAlert的主题(css), 默认为default
   let defaultThemes: string = GM_getResourceText("swalCss");
-  if (swalThemes === "Default") {
+  if (swalThemes == "default") {
     if (defaultThemes) {
       GM_addStyle(defaultThemes);
     } else {
@@ -37,10 +34,10 @@ function getThemesCss(swalThemes: string): void {
   ajax(
     {
       url: extCssUrl[swalThemes],
-      method: "GET",
+      dataType: "text",
     },
-    (data) => {
-      let ThemesCss = data.responseText;
+    (data: string) => {
+      let ThemesCss = data;
       if (ThemesCss.length < 100) {
         console.log(`${swalThemes} InvalidCss:\n${ThemesCss}`);
         showAlert(appError.SwalCssInvalid);
@@ -50,8 +47,8 @@ function getThemesCss(swalThemes: string): void {
       GM_addStyle(ThemesCss); // 注入css
     },
 
-    (statusCode) => {
-      if (statusCode === ajaxError) showAlert(appError.SwalCssErrReq);
+    (statusCode: number) => {
+      if (statusCode == ajaxError) showAlert(appError.SwalCssErrReq);
       else showAlert(appError.SwalCssBadReq + `(http#${statusCode})`);
     }
   );
