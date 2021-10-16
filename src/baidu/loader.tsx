@@ -6,8 +6,9 @@ import {
   feedbackVer,
 } from "@/common/const";
 import initQueryLink from "@/common/initQueryLink";
+import { hook, install } from "./legacyPage/loader";
 import installNew from "./newPage/loader";
-import installlegacy from "./legacyPage/loader";
+import registerPlugin from "./legacyPage/registerPlugin";
 import { setrefreshList, swalInstance } from "./common/const";
 import { getbdstoken } from "@/common/utils";
 
@@ -30,7 +31,8 @@ export function loaderBaidu(): void {
         .require("system-core:system/baseService/message/message.js")
         .trigger("system-refresh");
     });
-    installlegacy();
+    install();
+    hook("system-core:pluginHub/register/register.js", registerPlugin);
   } // 旧版界面loader入口
 
   let bdlink = initQueryLink(); // 解析url中的秒传链接
